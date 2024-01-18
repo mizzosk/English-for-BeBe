@@ -76,7 +76,8 @@ document.getElementById("newWordId").addEventListener("click",function (){
     this.innerHTML = vocabListNew[vocabListNewRandomWord];
         });
   
-function refreshPage() {
-    // Reload the current page
+// refresh button        
+document.getElementById("refresh").addEventListener("click",function (){
+    
 location.reload();
-}
+});
