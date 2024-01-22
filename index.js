@@ -88,7 +88,7 @@ function speak() {
         const utterance = new SpeechSynthesisUtterance(buttonText);
 
         // Optionally, you can set different properties like rate, pitch, and volume.
-        utterance.rate = 0.6;
+        //utterance.rate = 0.6;
         //utterance.pitch = 1.0;
         // utterance.volume = 1.0;
 
