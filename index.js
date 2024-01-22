@@ -86,7 +86,9 @@ function speak() {
 
     if (buttonText !== "") {
         const utterance = new SpeechSynthesisUtterance(buttonText);
-
+        
+        // Set the language to English (United States)
+        utterance.lang = 'en-US';
         // Optionally, you can set different properties like rate, pitch, and volume.
         //utterance.rate = 0.6;
         //utterance.pitch = 1.0;
