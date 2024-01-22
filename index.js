@@ -1,45 +1,5 @@
-// var numberOfDrumButtons = document.querySelectorAll(".drum").length;
-
-// for(var i=0; i<numberOfDrumButtons;i++){
-
-//     document.querySelectorAll(".drum")[i].addEventListener("click",function (){
-        
-//         makeSound(this.innerHTML);
-//     });
-    
-//     }
-
-// document.addEventListener("keydown",function (event){
-            
-//     makeSound(event.key);
-//     }    
-//     )
-
-// function makeSound(test){
-//     switch (test) {
-//         case "w": 
-//         var audioTom = new Audio("./sounds/tom-1.mp3");
-//         audioTom.play(); 
-//             break;
-//         case "a": 
-//         var audioCrash = new Audio("./sounds/crash.mp3");
-//         audioCrash.play(); 
-//             break;           
-            
-//         default:
-                    
-//             break;
-//     }   
-// };
-
-// document.addEventListener("click",function(event){
-//     console.log(event);
-// }
-// )
-
-
 // vocabulary list for new words
-var vocabListNewEn = ["living room","dinning room", "kitchen", "bathroom"];
+var vocabListNewEn = ["living room","dining room", "kitchen", "bathroom"];
 var vocabListNewSk = ["obývacia izba","jedáleň", "kuchyňa", "kúpeľňa"];
 var vocabListNewGameEn= [];
 var vocabListNewGameSk = [];
@@ -114,3 +74,32 @@ document.getElementById("newWordId").addEventListener("click",function (){
 document.getElementById("refresh").addEventListener("click",function (){
     randomNewWordGeneration()
 });
+
+
+
+// text to speech funtion
+const synth = window.speechSynthesis;
+
+function speak() {
+    const button = document.getElementById("newWordId");
+    const buttonText = button.textContent.trim();
+
+    if (buttonText !== "") {
+        const utterance = new SpeechSynthesisUtterance(buttonText);
+
+        // Optionally, you can set different properties like rate, pitch, and volume.
+        utterance.rate = 0.6;
+        //utterance.pitch = 1.0;
+        // utterance.volume = 1.0;
+
+        synth.speak(utterance);
+
+        utterance.onend = function () {
+            console.log("Speech finished");
+        };
+    } else {
+        console.log("Button text is empty.");
+    }
+}
+
+document.getElementById("textToSpeech").addEventListener("click", speak);
