@@ -137,9 +137,11 @@ document.getElementById("textToSpeechBt").addEventListener("click", speak);
 
                 //console.log(transcript);
                 if(displayedWordTranslated === transcriptClean){
-                    console.log("awesome - " + transcriptClean)
+                    playSound("./sounds/spravneBebe.m4a");
+                    console.log("HURRAAA - " + transcriptClean);
                 }
-                else {console.log("cele zle - " + transcriptClean);}
+                else {playSound("./sounds/skusZnovaProsim.m4a");
+                    console.log("cele zle - " + transcriptClean);}
                 //document.getElementById('output').textContent = transcript;
 
             };
@@ -165,4 +167,10 @@ document.getElementById("textToSpeechBt").addEventListener("click", speak);
             });
         } else {
             alert('Speech recognition is not supported in your browser. Please use a different browser.');
+        }
+
+
+        function playSound(soundFile) {
+            var audio = new Audio(soundFile);
+            audio.play();
         }
