@@ -19,14 +19,15 @@ footer {
 
 
 .set {
-  margin: 8% auto;
+  margin: 3% auto;
 }
 
 
-.vocab {
+
+.button {
   outline: none;
   border: 10px solid #404B69;
-  font-size: 4rem;
+  font-size: 5rem;
   font-family: 'Rubik', sans-serif;
   line-height: 1.4;
   font-weight: 600;
@@ -38,6 +39,12 @@ footer {
   margin: 10px;
   padding: 10px;
   background-color: white;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.button:hover{
+  box-shadow: 0 0 100px rgba(255, 255, 255, 0.3);
 }
 
 

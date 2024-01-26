@@ -41,7 +41,7 @@ if(vocabListNewGameEn.length === 0 && vocabListNewGameSk.length === 0){
     // displaying random word from en or sk vocabulary list
     newWord.innerHTML = vocabListNew[vocabListNewRandomWord];
     counter++;
-    console.log(counter);
+    //console.log(counter);
 
     if (vocabListNewGameEn.includes(newWord.innerHTML)){
         var index = vocabListNewGameEn.indexOf(newWord.innerHTML);
@@ -51,8 +51,8 @@ if(vocabListNewGameEn.length === 0 && vocabListNewGameSk.length === 0){
         var index = vocabListNewGameSk.indexOf(newWord.innerHTML);
         vocabListNewGameSk.splice(index,1);
     }
-    console.log(vocabListNewGameEn);
-    console.log(vocabListNewGameSk);
+    //console.log(vocabListNewGameEn);
+    //console.log(vocabListNewGameSk);
     }
 }
 // generate the random word upon page load
@@ -81,8 +81,7 @@ document.getElementById("refresh").addEventListener("click",function (){
 const synth = window.speechSynthesis;
 
 function speak() {
-    const button = document.getElementById("newWordId");
-    const buttonText = button.textContent.trim();
+    const buttonText = document.getElementById("newWordId").textContent;
 
     if (buttonText !== "") {
         const utterance = new SpeechSynthesisUtterance(buttonText);
@@ -102,11 +101,68 @@ function speak() {
         synth.speak(utterance);
 
         utterance.onend = function () {
-            console.log("Speech finished");
+           // console.log("Speech finished");
         };
     } else {
         console.log("Button text is empty.");
     }
 }
 
-document.getElementById("textToSpeech").addEventListener("click", speak);
+document.getElementById("textToSpeechBt").addEventListener("click", speak);
+
+//Speech to text function
+        // Check if the browser supports the Web Speech API
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            // Set the language for recognition (optional)
+            //recognition.lang = 'en-US';
+            recognition.lang = 'sk-SK';
+
+            // Event handler for when speech is recognized
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                const transcriptClean = transcript.toLowerCase().replace(/[.,?'"!]/g, '');
+
+                //get the translated version of displayed word
+                var displayedWord = document.getElementById("newWordId").textContent;
+                if (vocabListNewEn.includes(displayedWord)){
+                    var index = vocabListNewEn.indexOf(displayedWord);
+                    var displayedWordTranslated = vocabListNewSk[index];
+               } else {
+                var index = vocabListNewSk.indexOf(displayedWord);
+                 var displayedWordTranslated = vocabListNewEn[index];
+               }
+
+                //console.log(transcript);
+                if(displayedWordTranslated === transcriptClean){
+                    console.log("awesome - " + transcriptClean)
+                }
+                else {console.log("cele zle - " + transcriptClean);}
+                //document.getElementById('output').textContent = transcript;
+
+            };
+
+            // Event handler for when the recognition is started
+            recognition.onstart = function () {
+                //console.log('Speech recognition started');
+            };
+
+            // Event handler for when an error occurs
+            recognition.onerror = function (event) {
+                //console.error('Speech recognition error', event.error);
+            };
+
+            // Event handler for when the recognition is stopped
+            recognition.onend = function () {
+                //console.log('Speech recognition ended');
+            };
+
+            // Event listener for the start button
+            document.getElementById('speechToTextBt').addEventListener('click', function () {
+                recognition.start();
+            });
+        } else {
+            alert('Speech recognition is not supported in your browser. Please use a different browser.');
+        }
