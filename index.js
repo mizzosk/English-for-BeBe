@@ -1,14 +1,17 @@
 // vocabulary list for new words
-var vocabListNewEn = ["living room","dining room", "kitchen", "bathroom"];
-var vocabListNewSk = ["obývacia izba","jedáleň", "kuchyňa", "kúpeľňa"];
+//var vocabListNewEn = ["living room","dining room","kitchen","bathroom"];
+//var vocabListNewSk = ["obývacia izba","jedáleň","kuchyňa","kúpeľňa"];
+var vocabListNewEn = ["circle","square","rectangle","triangle","diamond","star","heart"];
+var vocabListNewSk = ["kruh","štvorec","obdĺžnik","trojuholník","diamant","hviezda","srdce"];
 var vocabListNewGameEn= [];
 var vocabListNewGameSk = [];
 var newWord = document.getElementById("newWordId");
-var counter =  0;
+var counterCorrectAnswer =  0;
+var counterFalseAnswer =  0;
 
 // filling vocabListNewGamewith 2x of the original words
 for (var i = 0; i < vocabListNewEn.length; i++) {
-  for (var j = 0; j < 2; j++) {
+  for (var j = 0; j < 1; j++) {
     vocabListNewGameEn.push(vocabListNewEn[i]);
     vocabListNewGameSk.push(vocabListNewSk[i]);
   }
@@ -27,9 +30,10 @@ if (vocabListNewGameEn.length === 0){
 } else {
 var randomSwitch = Math.floor(Math.random() * 2);
 }
-
+//game finished
 if(vocabListNewGameEn.length === 0 && vocabListNewGameSk.length === 0){
-    alert("Game OVER!!");
+    newWord.textContent = "Gratulujeme. Pocet spravnych odpovedi: " + counterCorrectAnswer
+    //alert("Gratulujem. Pocet spravnych odpovedi: " + counterCorrectAnswer);
 }else{
     if (randomSwitch===0 ){
         var vocabListNew = vocabListNewGameEn;
@@ -40,9 +44,9 @@ if(vocabListNewGameEn.length === 0 && vocabListNewGameSk.length === 0){
     }
     // displaying random word from en or sk vocabulary list
     newWord.innerHTML = vocabListNew[vocabListNewRandomWord];
-    counter++;
     //console.log(counter);
 
+    //delete used word from the game list
     if (vocabListNewGameEn.includes(newWord.innerHTML)){
         var index = vocabListNewGameEn.indexOf(newWord.innerHTML);
         vocabListNewGameEn.splice(index,1);
@@ -82,26 +86,26 @@ const synth = window.speechSynthesis;
 
 function speak() {
     const buttonText = document.getElementById("newWordId").textContent;
-
-    if (buttonText !== "") {
-        const utterance = new SpeechSynthesisUtterance(buttonText);
         
-        if (vocabListNewEn.includes(buttonText)){
-            // Set the language to English (United States)
-            utterance.lang = 'en-US';
-       } else {
-            // Set the language to English (United States)
-            utterance.lang = 'sk-SK';
-       }
-        // Optionally, you can set different properties like rate, pitch, and volume.
-        //utterance.rate = 0.6;
-        //utterance.pitch = 1.0;
-        // utterance.volume = 1.0;
-
+        if (buttonText !== "") {
+            const utterance = new SpeechSynthesisUtterance(buttonText);
+            
+            if (vocabListNewEn.includes(buttonText)){
+                // Set the language to English (United States)
+                utterance.lang = 'en-US';
+           } else {
+                // Set the language to Slovak
+                utterance.lang = 'sk-SK';
+           }
+            // Optionally, you can set different properties like rate, pitch, and volume.
+            //utterance.rate = 0.6;
+            //utterance.pitch = 1.0;
+            // utterance.volume = 1.0;
+        
         synth.speak(utterance);
-
+    
         utterance.onend = function () {
-           // console.log("Speech finished");
+          console.log("Speech finished");
         };
     } else {
         console.log("Button text is empty.");
@@ -115,18 +119,25 @@ document.getElementById("textToSpeechBt").addEventListener("click", speak);
         if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-
-            // Set the language for recognition (optional)
-            //recognition.lang = 'en-US';
             recognition.lang = 'sk-SK';
 
+             //if displayedWord is english set recognition language to slovak, else to english
+            //if (vocabListNewEn.includes(displayedWord)){
+                 // Set the language to Slovak
+                 //recognition.lang = 'sk-SK';
+                //console.log(recognition.lang);
+            //} else {
+                 // Set the language to English (United States)
+                 //recognition.lang = 'en-US';
+                //console.log(recognition.lang);
+           // }
+    
             // Event handler for when speech is recognized
             recognition.onresult = function (event) {
                 const transcript = event.results[0][0].transcript;
                 const transcriptClean = transcript.toLowerCase().replace(/[.,?'"!]/g, '');
-
-                //get the translated version of displayed word
                 var displayedWord = document.getElementById("newWordId").textContent;
+                //get the translated version of displayed word
                 if (vocabListNewEn.includes(displayedWord)){
                     var index = vocabListNewEn.indexOf(displayedWord);
                     var displayedWordTranslated = vocabListNewSk[index];
@@ -139,6 +150,11 @@ document.getElementById("textToSpeechBt").addEventListener("click", speak);
                 if(displayedWordTranslated === transcriptClean){
                     playSound("./sounds/spravneBebe.m4a");
                     console.log("HURRAAA - " + transcriptClean);
+                    counterCorrectAnswer++;
+                    randomNewWordGeneration();
+                    //new random word generation - only when there is at least one word in one of the lists
+                    //if(vocabListNewGameEn.length > 0 || vocabListNewGameSk.length > 0){
+                        //randomNewWordGeneration()}
                 }
                 else {playSound("./sounds/skusZnovaProsim.m4a");
                     console.log("cele zle - " + transcriptClean);}
